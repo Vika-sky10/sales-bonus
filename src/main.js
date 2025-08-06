@@ -97,7 +97,7 @@ function analyzeSalesData(data, options) {
         return sum + (product.price * (Number(item.quantity) || 1));
     }, 0);
 
-    record.items.forEach(item => {
+     record.items.forEach(item => {
         const product = productIndex[item.sku];
         if (!item.sku || typeof item.quantity === 'undefined') {
             console.warn(`Товар с SKU ${item.sku} не найден, пропускаем`);
@@ -112,6 +112,11 @@ function analyzeSalesData(data, options) {
         const revenue = options.calculateRevenue(item)
         const profit = revenue - cost;
         sellerStat.profit += profit;
+
+        if (!sellerStat.products_sold[item.sku]) {
+            sellerStat.products_sold[item.sku] = 0;
+        }
+        sellerStat.products_sold[item.sku] += Number(item.quantity) || 1;
     });
     })
     // @TODO: Сортировка продавцов по прибыли
